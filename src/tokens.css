@@ -1,0 +1,30 @@
+:root {
+    --ask-color: #ff485d;
+    --bid-color: #1aeaac;
+    --ask-volume-color: #321e2c;
+    --bid-volume-color: #112a2e;
+    --amount-value-color: #a1acc2;
+    --header-text-color: #636e85;
+    --app-bg-color: #101624;
+}
+
+.order-book--ask-color {
+    color: var(--ask-color);
+}
+
+.order-book--bid-color {
+    color: var(--bid-color);
+}
+
+.order-book--bid-volume-bg-color {
+    background-color: var(--bid-volume-color);
+}
+
+.order-book--ask-volume-bg-color {
+    background-color: var(--ask-volume-color);
+}
+
+.small-text-normal-weight {
+    font-size: 12px;
+    font-weight: normal;
+}

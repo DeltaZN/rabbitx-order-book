@@ -1,0 +1,31 @@
+.order-book__list-item {
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    padding: 0 10px;
+    font-family: monospace;
+}
+
+.order-book__list-item__total-bg {
+    position: absolute;
+    height: 100%;
+    z-index: -1;
+}
+
+.order-book__list-item__price-col {
+    flex: 1;
+    text-align: left;
+}
+
+.order-book__list-item__amount-col {
+    flex: 1;
+    text-align: right;
+    color: var(--amount-value-color);
+}
+
+.order-book__list-item__total-col {
+    flex: 1;
+    text-align: right;
+    position: relative;
+    color: var(--amount-value-color);
+}
