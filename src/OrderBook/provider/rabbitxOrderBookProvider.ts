@@ -27,14 +27,31 @@ interface OrderBookTO {
 export function createOrderBookProvider(
   centrifuge: Centrifuge
 ): OrderBookProvider {
+
+  const createSubscription = (symbol: string) => {
+    const sub = centrifuge.newSubscription(`orderbook:${symbol}`);
+
+    return [sub, () => {
+      sub.removeAllListeners();
+      sub.unsubscribe();
+      centrifuge.removeSubscription(sub);
+    }] as const;
+  }
+  
   const subscribe = (
     symbol: string,
     onDataCb: (cb: (prevData: OrderBook) => OrderBook) => void
   ) => {
-    const sub = centrifuge.newSubscription(`orderbook:${symbol}`);
+    let [sub, unsubscribe] = createSubscription(symbol);
     let prevSequence = 0;
 
-    sub.on("publication", (ctx) => {
+    const startSubscription = () => {
+      sub.on("publication", publicationHandler);
+      sub.on("subscribed", subscribedHandler);
+      sub.subscribe();
+    }
+
+    const publicationHandler = (ctx: any) => {
       if (ctx.data.market_id !== symbol) {
         console.error("Received data for different symbol.");
         return;
@@ -44,30 +61,28 @@ export function createOrderBookProvider(
       // the most accurate orderbook state.
       if (ctx.data.sequence !== prevSequence + 1) {
         console.warn("Sequence mismatch, resubscribe to data source.");
-        sub.unsubscribe();
-        sub.subscribe();
+        unsubscribe();
+        [sub, unsubscribe] = createSubscription(symbol);
+        startSubscription();
         return;
       }
       prevSequence = ctx.data.sequence;
       onDataCb((prevData) => processOrderBookUpdate(prevData, ctx.data));
-    });
+    }
 
-    sub.on("subscribed", (ctx) => {
+    const subscribedHandler = (ctx: any) => {
       if (ctx.data.market_id !== symbol) {
         console.error("Received data for different symbol.");
         return;
       }
       prevSequence = ctx.data.sequence;
       onDataCb(() => processOrderBookUpdate(getDefaultOrderBook(), ctx.data));
-    });
+    }
+    
 
-    sub.subscribe();
+    startSubscription();
 
-    return () => {
-      sub.removeAllListeners();
-      sub.unsubscribe();
-      centrifuge.removeSubscription(sub);
-    };
+    return () => unsubscribe();
   };
 
   return {
