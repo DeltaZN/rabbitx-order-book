@@ -8,7 +8,7 @@ The widget also manages rendering of the order book efficiently by using a custo
 
 Default (RabbitX) implementation of the order book data provider handles network disruptions and reconnects to data source automatically. However, you can supply your own order book provider by implementing the `OrderBookProvider` interface (at least for mocking data in test scenarios).
 
-You can see deployed widget [here](https://deltazn.github.io/).
+You can see deployed widget [here](https://rabbitx-order-book.vercel.app/).
 
 ## Code Style
 
