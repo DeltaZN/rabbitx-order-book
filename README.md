@@ -1,5 +1,7 @@
 # Order Book Widget
 
+You can see deployed on vercel widget [here](https://rabbitx-order-book.vercel.app/).
+
 ## Overview
 
 This project provides an isolated UI order book widget that displays the order book for a given instrument. The order book is updated in real-time using a WebSocket connection.
@@ -7,8 +9,6 @@ This project provides an isolated UI order book widget that displays the order b
 The widget also manages rendering of the order book efficiently by using a custom hook `useDirectDomUpdate` that updates the DOM without (relatively) expensive React rerender. It is especially useful when we have a lot of frequent updates at the same price levels.
 
 Default (RabbitX) implementation of the order book data provider handles network disruptions and reconnects to data source automatically. However, you can supply your own order book provider by implementing the `OrderBookProvider` interface (at least for mocking data in test scenarios).
-
-You can see deployed widget [here](https://rabbitx-order-book.vercel.app/).
 
 ## Code Style
 
